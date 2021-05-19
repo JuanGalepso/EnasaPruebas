@@ -32,6 +32,7 @@ class LoginController extends Controller
         $roles = Role::get();
         return view('admin.login.index',  compact('roles','logins'));
     }
+    
         $logins = Login::WithUser()->where('user_id', auth()->user()->id)->get();
         $roles = Role::get();
         return view('admin.login.index',  compact('roles','logins'));

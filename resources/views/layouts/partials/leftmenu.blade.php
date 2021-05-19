@@ -18,7 +18,7 @@
         <a href="#" class="menu-toggle nav-link has-dropdown"><i
                 data-feather="layout"></i><span>Usuarios</span></a>
         <ul class="dropdown-menu">
-            <li><a class="nav-link" href="{{url('user')}}">Listado</a></li>
+            <li><a class="nav-link" href="{{url('users')}}">Listado</a></li>
         </ul>
     </li>
     @endcan

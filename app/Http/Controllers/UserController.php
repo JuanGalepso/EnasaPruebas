@@ -7,34 +7,35 @@ use App\Models\User;
 use App\Http\Requests\StoreUser;
 use App\Http\Requests\UpdateUser;
 use App\Models\Log\LogSistema;
+use App\Http\Controllers\Controller;
+
 class UserController extends Controller
 {
-     public function __construct()
+    public function __construct()
     {
-        $this->middleware('permission:VerUsuario')->only('index'); 
+        $this->middleware('permission:VerUsuario')->only('index');
         $this->middleware('permission:RegistrarUsuario')->only('create');
         $this->middleware('permission:RegistrarUsuario')->only('store');
         $this->middleware('permission:EditarUsuario')->only('edit');
         $this->middleware('permission:EditarUsuario')->only('update');
-        $this->middleware('permission:VerUsuario')->only('show'); 
-
+        $this->middleware('permission:VerUsuario')->only('show');
     }
-   
+
     public function index(Request $request)
     {
         $log = new LogSistema();
 
         $log->user_id = auth()->user()->id;
-        $log->tx_descripcion = 'El usuario: '.auth()->user()->display_name.' Ha ingresado a ver los usuarios a las: '
-        . date('H:m:i').' del día: '.date('d/m/Y');
+        $log->tx_descripcion = 'El usuario: ' . auth()->user()->name . ' Ha ingresado a ver los usuarios a las: '
+            . date('H:m:i') . ' del día: ' . date('d/m/Y');
         $log->save();
 
 
         $users = User::with('roles')->with('permissions')
-                       ->orderBy('created_at', 'desc')
-                       ->paginate(10);
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
 
-        return view('admin.usuarios.index', ['users' => $users]);
+        return view('admin.users.index', compact('users'));
     }
 
 
@@ -42,15 +43,15 @@ class UserController extends Controller
 
     public function create()
     {
-        
+
         $log = new LogSistema();
-        
+
         $log->user_id = auth()->user()->id;
-        $log->tx_descripcion = 'El usuario: '.auth()->user()->display_name.' Ha ingresado a crear un usuario a las: '
-        . date('H:m:i').' del día: '.date('d/m/Y');
+        $log->tx_descripcion = 'El usuario: ' . auth()->user()->name . ' Ha ingresado a crear un usuario a las: '
+            . date('H:m:i') . ' del día: ' . date('d/m/Y');
         $log->save();
 
-        return view('admin.usuarios.create');
+        return view('admin.users.create');
     }
 
 
@@ -60,73 +61,65 @@ class UserController extends Controller
     {
         $user = User::create($request->except('role'));
 
-        if ($request->has('role'))
-        {
+        if ($request->has('role')) {
             $user->assignRole($request->role);
         }
 
         $log = new LogSistema();
-        
+
         $log->user_id = auth()->user()->id;
-        $log->tx_descripcion = 'El usuario: '.auth()->user()->display_name.' Ha ingresado al sistema el usuario: '.$request->name.' '.$request->lastname.' a las: '
-        . date('H:m:i').' del día: '.date('d/m/Y');
+        $log->tx_descripcion = 'El usuario: ' . auth()->user()->name . ' Ha registrado en el sistema al usuario: ' . $request->name . ' ' . $request->lastname . ' a las: ' . date('H:m:i') . ' del día: ' . date('d/m/Y');
         $log->save();
 
-        return json_encode(['success' => true, 'user_id' => $user->encode_id]);
+        return redirect()->route('admin.users.edit', ['user' => $user]);
     }
 
 
 
 
-    public function show($id)
+    public function show(User $user)
     {
-        $user = User::find(\Hashids::decode($id)[0]);
 
-         $log = new LogSistema();
-        
-         $log->user_id = auth()->user()->id;
-         $log->tx_descripcion = 'El usuario: '.auth()->user()->display_name.' Ha ingresado a ver los datos del usuario: '.$user->display_name.' a las: '
-        . date('H:m:i').' del día: '.date('d/m/Y');
+        $log = new LogSistema();
+
+        $log->user_id = auth()->user()->id;
+        $log->tx_descripcion = 'El usuario: ' . auth()->user()->name . ' Ha ingresado a ver los datos del usuario: ' . $user->name . ' a las: '
+            . date('H:m:i') . ' del día: ' . date('d/m/Y');
         $log->save();
 
-        return view('admin.usuarios.show', ['user' => $user]);
+        return view('admin.users.show', compact('user'));
     }
 
 
 
 
-    public function edit($id)
+    public function edit(User $user)
     {
-        $user = User::find(\Hashids::decode($id)[0]);
 
         $log = new LogSistema();
         $log->user_id = auth()->user()->id;
-        $log->tx_descripcion = 'El usuario: '.auth()->user()->display_name.' Ha ingresado a editar los datos del usuario: '.$user->display_name.' a las: '
-        . date('H:m:i').' del día: '.date('d/m/Y');
+        $log->tx_descripcion = 'El usuario: ' . auth()->user()->name . ' Ha ingresado a editar los datos del usuario: ' . $user->name . ' a las: ' . date('H:m:i') . ' del día: ' . date('d/m/Y');
         $log->save();
-        return view('admin.usuarios.edit', ['user' => $user]);
+        return view('admin.users.edit', compact('user'));
     }
 
 
 
 
-    public function update(UpdateUser $request, $id)
+    public function update(Request $request, User $user)
     {
-        $user = User::find(\Hashids::decode($id)[0]);
         $user->update($request->except('role'));
 
-        if ($request->has('role'))
-        {
+        if ($request->has('role')) {
             $user->syncRoles($request->role);
         }
 
-         $log = new LogSistema();
+        $log = new LogSistema();
         $log->user_id = auth()->user()->id;
-        $log->tx_descripcion = 'El usuario: '.auth()->user()->display_name.' Ha modificó los datos del usuario: '.$user->display_name.' a las: '
-        . date('H:m:i').' del día: '.date('d/m/Y');
+        $log->tx_descripcion = 'El usuario: ' . auth()->user()->name . ' Ha modificó los datos del usuario: ' . $user->name . ' a las: ' . date('H:m:i') . ' del día: ' . date('d/m/Y');
         $log->save();
 
-        return json_encode(['success' => true]);
+        return redirect()->route('admin.users.index')->with('success', 'El Usuario se editó con exito!');
     }
 
 
@@ -134,9 +127,9 @@ class UserController extends Controller
 
     public function destroy($id)
     {
-        $user = User::find(\Hashids::decode($id)[0])->delete();
-
-        return json_encode(['success' => true]);
+        // $user = User::find($id);
+        // $user->delete();
+        // return back()->with('success', 'El usuario se eliminó correctamente');
     }
 
 

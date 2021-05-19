@@ -20,6 +20,7 @@
         "laravelcollective/html": "^6.2",
         "laraveles/spanish": "^1.5",
         "pyaesone17/active-state": "^1.2",
+        "realrashid/sweet-alert": "^3.2",
         "spatie/laravel-permission": "^4.0",
         "vinkla/hashids": "^8.1"
     },

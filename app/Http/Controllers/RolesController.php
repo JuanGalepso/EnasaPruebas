@@ -42,7 +42,7 @@ class RolesController extends Controller
         $log = new LogSistema();
         
         $log->user_id = auth()->user()->id;
-        $log->tx_descripcion = 'El usuario: '.auth()->user()->display_name.' Ha guardado nuevo role al sistema: '.$request->name.' a las: '
+        $log->tx_descripcion = 'El usuario: '.auth()->user()->name.' Ha guardado nuevo role al sistema: '.$request->name.' a las: '
         . date('H:m:i').' del día: '.date('d/m/Y');
         $log->save();
 
@@ -68,12 +68,11 @@ class RolesController extends Controller
      */
     public function edit($id)
     {
-        $role = Role::find(\Hashids::decode($id)[0]);
+        $role = Role::find($id);
 
         $log = new LogSistema();
         $log->user_id = auth()->user()->id;
-        $log->tx_descripcion = 'El usuario: '.auth()->user()->display_name.' Ha ingresado para editar el role en el sistema sistema: '.$role->name.' a las: '
-        . date('H:m:i').' del día: '.date('d/m/Y');
+        $log->tx_descripcion = 'El usuario: '.auth()->user()->name.' Ha ingresado para editar el role en el sistema sistema: '.$role->name.' a las: ' . date('H:m:i').' del día: '.date('d/m/Y');
         $log->save();
         return view('admin.roles.edit', ['role' => $role]);
     }
@@ -87,16 +86,14 @@ class RolesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $role = Role::find(\Hashids::decode($id)[0]);
+        $role = Role::find($id);
         $role->guard_name = 'web';
         $role->name = $request->name;
         $role->icon = $request->icon;
 
         $role->save();
 
-        return json_encode(['success' => true, 'user_id' => $role->encode_id]);
-
-
+        return redirect()->route('admin.roles.index')->with('success', 'El Rol se editó con exito!');
     }
 
     /**
@@ -107,6 +104,8 @@ class RolesController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $role = Role::find($id);
+        $role->delete();
+        return back()->with('success', 'Eliminado correctamente');
     }
 }

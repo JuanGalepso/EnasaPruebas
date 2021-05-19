@@ -13,10 +13,13 @@ class UsuariosTableSeeder extends Seeder
     public function run()
     {
         $user = new User;
+        $user->cedula   = '20391877';
         $user->name     = 'Admin';
+        $user->slug     = 'admin';
+        $user->lastname = 'Administrador';
         $user->username = 'laradmin';
         $user->genero   = 'M';
-        $user->lastname = 'Administrador';
+        $user->phone    = '0412-5205105';
         $user->email    = 'admin@mail.com';
         $user->password = 'admin';
         $user->status   = 1; // (1) active (0)disabled
@@ -25,10 +28,13 @@ class UsuariosTableSeeder extends Seeder
         $user->assignRole('Administrador');
 
 
-         $user = new User;
+        $user = new User;
+        $user->cedula   = '20391878';
         $user->name     = 'Usuario';
+        $user->slug     = 'usuario';
         $user->username = 'larausuario';
         $user->genero   = 'F';
+        $user->phone    = '0412-5205105';
         $user->lastname = 'Usuarios';
         $user->email    = 'usuario@mail.com';
         $user->password = 'admin';

@@ -44,7 +44,8 @@
                     <th>#</th>
                     <th>Nombre completo</th>
                     <th>Usuario</th>
-                    <th>Opciones</th> 
+                    <th>Editar</th> 
+                    <th></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -54,9 +55,21 @@
                     <td>{{ $role->name }}</td>
                     <td>{{ $role->guard_name }}</td>
                     <td>
-                      @can('EditarRole')
-                       <a class="btn btn-round blue darken-4" href="{{ url('roles', [$role->encode_id,'edit']) }}"><i class="mdi mdi-pencil-outline text-center" style="color: white;"></i> </a>
-                     @endcan
+                        @can('EditarRole')
+                       <a class="btn btn-round blue darken-4" href="{{ route('admin.roles.edit', $role) }}"><i class="mdi mdi-pencil-outline text-center" style="color: white;"></i> </a>
+                      @endcan
+                    </td>
+                    <td>
+                     @can('EditarRole')
+
+                        <form class="formulario-eliminar" action="{{route('admin.roles.destroy', $role)}}" class="formulario-eliminar" method="POST">
+                         @csrf
+                         @method('delete')
+                         <button type="submit" class="btn btn-round blue darken-4"><i class="mdi mdi-trash-can-outline text-center" style="color: white;"></i> </button>
+                      </form>
+                        @endcan
+                      </div>
+                      
                        
                     </td>
                     </tr>

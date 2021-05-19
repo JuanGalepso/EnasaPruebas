@@ -11,6 +11,7 @@
     <!-- General CSS Files -->
     <!-- General CSS Files -->
      <link rel="stylesheet" href="{{asset('assets/css/app.min.css')}} " />
+     <link rel="stylesheet" href="{{asset('vendor/fontawesome-free/css/all.min.css')}} " />
      <link rel="stylesheet" href="{{asset('css/app.css')}} " />
      <link rel="stylesheet" href="{{asset('css/system.css')}} " />
     @yield('styles')
@@ -222,6 +223,7 @@
                                 </div>
                                
                                 {{-- CONTENIDO  --}}
+                                @include('sweetalert::alert')
                                 @yield('content')
                             </div>
                         </div>
@@ -252,7 +254,9 @@
   <script src="{{asset('assets/js/scripts.js')}}"></script>
   <!-- Custom JS File -->
   <script src="{{asset('assets/js/custom.js')}}"></script>
-
+  <!-- Sweetalert2 JS File -->
+  <script src="{{asset('vendor/sweetalert2.js')}}"></script>
+  <script src="{{asset('vendor/sweetalert-eliminar.js')}}"></script>
     @stack('scripts')
     <script>
      /** add active class and stay opened when selected */

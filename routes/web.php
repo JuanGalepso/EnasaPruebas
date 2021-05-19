@@ -19,9 +19,9 @@ Route::middleware(['auth',])->group(function () {
 
   Route::get('/', 'HomeController@index')->name('home');
   Route::resource('logins', 'LoginController');
-  Route::resource('user',   'UserController');
+  Route::resource('users',   'UserController')->names('admin.users');
   Route::resource('permission', 'PermissionController');
   Route::get('logs', 'HomeController@logs')->name('logs');
-  Route::resource('roles',   'RolesController');
+  Route::resource('roles',   'RolesController')->names('admin.roles');
 
 });

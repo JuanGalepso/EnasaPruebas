@@ -21,7 +21,7 @@ class User extends Authenticatable
     protected $dates = ['deleted_at'];
 
     protected $fillable = [
-        'name', 'lastname', 'email', 'password', 'status','username','genero'
+        'cedula', 'name','slug', 'lastname', 'phone', 'email', 'password', 'status','username','genero', 'phone2', 'address'
     ];
 
     protected $hidden = [];
@@ -89,6 +89,11 @@ class User extends Authenticatable
     public function getEncodeIDAttribute()
     {
         return Hashids::encode($this->id);
+    }
+
+    public function getRouteKeyName()
+    {
+        return "slug";
     }
 
 

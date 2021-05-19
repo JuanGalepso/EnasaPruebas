@@ -28,9 +28,8 @@
              
             </div>
           <div class="card-body">
-            <form role="form" id="main-form">
-            <input type="hidden" id="_url" value="{{ url('roles', [$role->encode_id]) }}">
-            <input type="hidden" id="_token" value="{{ csrf_token() }}">
+            {!! Form::model($role, ['route' => ['admin.roles.update', $role->id], 'method' => 'PUT']) !!}
+
             <div class="box-body">
               <div class="form-group pading">
                 <label for="name">Nombre</label>
